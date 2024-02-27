@@ -17,10 +17,10 @@ SERVICE_ACCOUNT_FILE = 'creds.json'
 GOOGLE_MAPS_API_KEY = 'AIzaSyCj4KjlyV3p-FvY50vYYFl8HKtY-sU3OBE'
 
 # Initialize clients
-credentials = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPE)
-gs_client = gspread.authorize(credentials)
-sheet = gs_client.open("P_3 code inst").sheet1
-gmaps_client = googlemaps.Client(key=GOOGLE_MAPS_API_KEY)
+CREDENTIALS = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPE)
+GS_CLIENT = gspread.authorize(CREDENTIALS)
+SHEET = GS_CLIENT.open("P_3 code inst").sheet1
+GMAPS_CLIENT = googlemaps.Client(key=GOOGLE_MAPS_API_KEY)
 
 def get_contact_info(website_url):
     print(f"Scraping website: {website_url}")
@@ -74,7 +74,7 @@ def fetch_businesses(location, business_type):
     businesses = []
 
     try:
-        places_result = gmaps_client.places_nearby(location=location, radius=1000, type=business_type)
+        places_result = GMAPS_CLIENT.places_nearby(location=location, radius=1000, type=business_type)
         
         if 'results' in places_result and places_result['results']:
             for place in places_result['results'][:5]:  # Limit for testing
@@ -82,7 +82,7 @@ def fetch_businesses(location, business_type):
                 address = place.get('vicinity', 'Not Available')
                 place_id = place.get('place_id', '')
                 
-                details_result = gmaps_client.place(place_id=place_id, fields=['website'])
+                details_result = GMAPS_CLIENT.place(place_id=place_id, fields=['website'])
                 website = details_result.get('result', {}).get('website', 'Not Available')
                 
                 email, phone, additional_info = get_contact_info(website) if website != 'Not Available' else ('Not Available', 'Not Available', {})
@@ -98,11 +98,11 @@ def fetch_businesses(location, business_type):
     return businesses
 
 def update_sheet(businesses):
-    sheet.clear()
-    sheet.append_row(["Business Name", "Address", "Email", "Phone", "Website", "Description", "Address Region", "Star Rating"])
+    SHEET.clear()
+    SHEET.append_row(["Business Name", "Address", "Email", "Phone", "Website", "Description", "Address Region", "Star Rating"])
     for business in businesses:
         try:
-            sheet.append_row(business)
+            SHEET.append_row(business)
         except Exception as e:
             print(f"Error updating sheet for {business[0]}: {e}")
 
