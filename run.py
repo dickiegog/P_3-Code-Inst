@@ -1,4 +1,3 @@
-import argparse
 import requests
 from bs4 import BeautifulSoup
 import googlemaps
@@ -21,6 +20,21 @@ CREDENTIALS = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes
 GS_CLIENT = gspread.authorize(CREDENTIALS)
 SHEET = GS_CLIENT.open("P_3 code inst").sheet1
 GMAPS_CLIENT = googlemaps.Client(key=GOOGLE_MAPS_API_KEY)
+
+def validate_coordinates(input_str):
+    try:
+        lat, lng = map(float, input_str.split(","))
+        if lat < -90 or lat > 90 or lng < -180 or lng > 180:
+            raise ValueError("Coordinates out of range.")
+        return input_str
+    except ValueError as e:
+        print(f"Invalid coordinates: {e}")
+        return None
+
+def validate_business_type(value):
+    if not value:
+        raise argparse.ArgumentTypeError("Business type must not be empty.")
+    return value
 
 def get_contact_info(website_url):
     print(f"Scraping website: {website_url}")
@@ -106,14 +120,21 @@ def update_sheet(businesses):
         except Exception as e:
             print(f"Error updating sheet for {business[0]}: {e}")
 
-def main(location, business_type):
-    businesses = fetch_businesses(location, business_type)
-    update_sheet(businesses)
+def main():
+    while True:
+        location_input = input("Enter the coordinates (latitude,longitude): ")
+        location = validate_coordinates(location_input)
+        if location:
+            break
+        else:
+            print("Please enter valid coordinates.")
+
+    business_type = input("Enter the business type: ").strip()
+    if business_type:
+        businesses = fetch_businesses(location, business_type)
+        update_sheet(businesses)
+    else:
+        print("Business type cannot be empty.")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Fetch and record business information from Google Places.")
-    parser.add_argument("--location", help="Latitude,Longitude of the location", required=True)
-    parser.add_argument("--type", help="Type of business", required=True)
-    
-    args = parser.parse_args()
-    main(args.location, args.type)
+    main()
