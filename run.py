@@ -5,6 +5,7 @@ from google.oauth2.service_account import Credentials
 import gspread
 import re
 import json
+import os
 
 # Setup for Google Sheets and Google Places API
 SCOPE = [
@@ -12,7 +13,8 @@ SCOPE = [
     "https://www.googleapis.com/auth/drive.file",
     "https://www.googleapis.com/auth/drive"
 ]
-SERVICE_ACCOUNT_FILE = 'creds.json'
+SERVICE_ACCOUNT_FILE = 'creds.json' 
+GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_MAPS_API_KEY')
 
 # Initialize clients
 CREDENTIALS = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPE)
@@ -62,6 +64,17 @@ def get_contact_info(website_url):
             # Extract phone numbers
             possible_phones = re.findall(r'\b(?:\+?\d{1,3}\s*(?:\(0?\d{1,3}\))?|\(0?\d{1,3}\)\s*)?(?:(?:\d\s*){6,}\d)\b', soup.get_text())
             phones.update(possible_phones)
+
+            # Extract additional information from JSON-LD script tags
+            scripts = soup.find_all('script', {'type': 'application/ld+json'})
+            for script in scripts:
+                data = json.loads(script.string)
+                if 'description' in data:
+                    additional_info['description'] = data['description']
+                if 'address' in data:
+                    additional_info['addressRegion'] = data['address'].get('addressRegion', '')
+                if 'starRating' in data:
+                    additional_info['starRating'] = data['starRating'].get('ratingValue', '')
 
 
         except Exception as e:
