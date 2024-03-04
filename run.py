@@ -39,50 +39,51 @@ def validate_business_type(value):
 def get_contact_info(website_url):
     print(f"Scraping website: {website_url}")
     emails, phones, additional_info = set(), set(), {}
+    mailto_found = False
 
     def scrape_page(url):
+        nonlocal mailto_found
         print(f"Scraping page: {url}")
         try:
             response = requests.get(url, timeout=10)
             soup = BeautifulSoup(response.text, 'html.parser')
 
-            # Extract emails from "mailto:" links
-            mailto_links = soup.find_all(href=re.compile(r'^mailto:'))
+            # Extract "mailto:" emails first
+            mailto_links = soup.find_all('a', href=re.compile(r'^mailto:'))
             for mailto in mailto_links:
-                email = mailto.get('href').replace("mailto:", "").split('?')[0]  # Remove any query parameters
+                email = mailto['href'].replace("mailto:", "").split('?')[0]
                 emails.add(email)
+                mailto_found = True
 
-            # Extract emails from text
-            email_regex = re.compile(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}')
-            text_emails = set(email_regex.findall(soup.get_text()))
-            emails.update(text_emails)
+            if not mailto_found:
+                # Extract text-based emails only if no "mailto:" email is found
+                text_emails = re.findall(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', soup.get_text())
+                emails.update(text_emails)
 
             # Extract phone numbers
-            phone_regex = re.compile(r'\+\d{1,2}\s?\(?\d{3}\)?\s?\d{3}[-\s]?\d{4}')
-            found_phones = phone_regex.findall(soup.get_text())
-            phones.update(found_phones)
+            possible_phones = re.findall(r'\b(?:\+?\d{1,3}\s*(?:\(0?\d{1,3}\))?|\(0?\d{1,3}\)\s*)?(?:(?:\d\s*){6,}\d)\b', soup.get_text())
+            phones.update(possible_phones)
+
 
         except Exception as e:
             print(f"Error scraping {url}: {e}")
 
-    # Initial scrape
     scrape_page(website_url)
 
-    # Attempt to find and scrape additional pages that might contain contact information
+    # Attempt to find and scrape additional contact pages
     try:
         soup = BeautifulSoup(requests.get(website_url).text, 'html.parser')
         for link in soup.find_all('a', href=True):
             href = link['href']
-            if href and any(keyword in href for keyword in ['contact', 'about', 'kontakt']):
+            if any(keyword in href.lower() for keyword in ['contact', 'about', 'kontakt']):
                 full_url = requests.compat.urljoin(website_url, href)
                 scrape_page(full_url)
     except Exception as e:
         print(f"Error finding additional contact info on {website_url}: {e}")
 
-    return ', '.join(emails) if emails else "Not Available", \
-           ', '.join(phones) if phones else "Not Available", \
-           additional_info
-          
+    return ', '.join(emails) if emails else "Not Available", ', '.join(phones) if phones else "Not Available", additional_info
+
+
 def fetch_businesses(location, business_type):
     print(f"Fetching businesses for location: {location}, type: {business_type}")
     businesses = []
