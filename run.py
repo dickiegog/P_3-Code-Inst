@@ -22,6 +22,7 @@ GS_CLIENT = gspread.authorize(CREDENTIALS)
 SHEET = GS_CLIENT.open("P_3 code inst").sheet1
 GMAPS_CLIENT = googlemaps.Client(key=GOOGLE_MAPS_API_KEY)
 
+# validation functions for user input
 def validate_coordinates(input_str):
     try:
         lat, lng = map(float, input_str.split(","))
@@ -37,6 +38,7 @@ def validate_business_type(value):
         raise argparse.ArgumentTypeError("Business type must not be empty.")
     return value
 
+# function to scrape any relevant details or info from website
 def get_contact_info(website_url):
     print(f"Scraping website: {website_url}")
     emails, phones, additional_info = set(), set(), {}
@@ -65,7 +67,7 @@ def get_contact_info(website_url):
             possible_phones = re.findall(r'\b(?:\+?\d{1,3}\s*(?:\(0?\d{1,3}\))?|\(0?\d{1,3}\)\s*)?(?:(?:\d\s*){6,}\d)\b', soup.get_text())
             phones.update(possible_phones)
 
-            # Extract additional information from JSON-LD script tags
+            # Extract additional information: description, region and rating
             scripts = soup.find_all('script', {'type': 'application/ld+json'})
             for script in scripts:
                 data = json.loads(script.string)
@@ -95,13 +97,13 @@ def get_contact_info(website_url):
 
     return ', '.join(emails) if emails else "Not Available", ', '.join(phones) if phones else "Not Available", additional_info
 
-
+# function to fetch businesses data from Google Places API
 def fetch_businesses(location, business_type):
     print(f"Fetching businesses for location: {location}, type: {business_type}")
     businesses = []
 
     try:
-        places_result = GMAPS_CLIENT.places_nearby(location=location, radius=1000, type=business_type)
+        places_result = GMAPS_CLIENT.places_nearby(location=location, radius=2000, type=business_type)
         
         if 'results' in places_result and places_result['results']:
             for place in places_result['results'][:5]:  # Limit for testing
@@ -123,7 +125,7 @@ def fetch_businesses(location, business_type):
         print(f"Error fetching businesses: {e}")
     
     return businesses
-
+# add info to Google Sheets
 def update_sheet(businesses):
     SHEET.clear()
     SHEET.append_row(["Business Name", "Address", "Email", "Phone", "Website", "Description", "Address Region", "Star Rating"])
@@ -133,6 +135,7 @@ def update_sheet(businesses):
         except Exception as e:
             print(f"Error updating sheet for {business[0]}: {e}")
 
+# main function and user input
 def main():
     while True:
         location_input = input("Enter the coordinates (latitude,longitude): ")
