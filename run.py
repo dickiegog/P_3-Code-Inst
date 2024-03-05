@@ -64,6 +64,14 @@ def get_business_type_input():
         else:
             print("Invalid selection. Please enter a number from the list.")
 
+# Introduction and explanation of the tool
+def introduction():
+    print("Welcome to the Local Business Finder!")
+    print("This tool allows you to search for local businesses of a specific type within a given location.")
+    print("The search results will be updated in a Google Sheet for your convenience.")
+    print("Let's get started! Follow the prompts below:\n")
+
+
 # function to scrape any relevant details or info from website
 def get_contact_info(website_url):
     print(f"Scraping website: {website_url}")
@@ -140,7 +148,6 @@ def fetch_businesses(location, business_type):
             email, phone, additional_info = get_contact_info(website) if website != 'Not Available' else ('Not Available', 'Not Available', {})
             business_info = [name, address, email, phone, website, additional_info.get('description', ''), additional_info.get('addressRegion', ''), additional_info.get('starRating', '')]
             businesses.append(business_info)
-            print(f"Fetched business info: {business_info}")
     else:
         print("No results found for the specified query.")
     
@@ -158,18 +165,27 @@ def update_sheet(businesses):
 
 # main function and user input
 def main():
-    validated_location = None
-    while not validated_location:
-        location_input = input("Enter the location (e.g., 'Cork, Ireland'): \n").strip()
-        validated_location = validate_location_input(location_input)
-        if validated_location:
-            print(f"Validated location: {validated_location}")
-        else:
-            print("Invalid location. Please try again.")
-    
-    business_type = get_business_type_input()
-    businesses = fetch_businesses(validated_location, business_type)
-    update_sheet(businesses)
+    introduction()  # Call the introduction function at the start
+    while True:  # Wrap the main content in a loop for continuous interaction
+        validated_location = None
+        while not validated_location:
+            location_input = input("Enter the location (e.g., 'Cork, Ireland'): ").strip()
+            validated_location = validate_location_input(location_input)
+            if validated_location:
+                print(f"Validated location: {validated_location}\n")
+            else:
+                print("Invalid location. Please try again.\n")
+
+        business_type = get_business_type_input()
+        businesses = fetch_businesses(validated_location, business_type)
+        update_sheet(businesses)
+        print("\nThe search results have been updated to the Google Sheet titled 'P_3 code inst'.\n")
+
+        # Ask if the user wants to perform another search
+        another_search = input("Would you like to perform another search? (yes/no): ").strip().lower()
+        if another_search != 'yes':
+            print("Thank you for using the Local Business Finder. Goodbye!")
+            break  # Break out of the loop if the user doesn't want another search
 
 if __name__ == "__main__":
     main()
