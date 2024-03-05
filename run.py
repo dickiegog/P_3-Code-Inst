@@ -42,11 +42,11 @@ def validate_location_input(location_input):
     response = requests.get(find_place_url, params=params).json()
 
     if response['status'] == 'OK':
-        # If a location is found, return the formatted address
-        return response['candidates'][0]['formatted_address']
+        # Return the entire response for further verification by the user
+        return response['candidates'][0]
     else:
-        # If no valid location is found, return None
         return None
+
         
 def get_business_type_input():
     """
@@ -165,14 +165,20 @@ def update_sheet(businesses):
 
 # main function and user input
 def main():
-    introduction()  # Call the introduction function at the start
-    while True:  # Wrap the main content in a loop for continuous interaction
+    introduction()
+    while True:
         validated_location = None
         while not validated_location:
             location_input = input("Enter the location (e.g., 'Cork, Ireland'): ").strip()
-            validated_location = validate_location_input(location_input)
-            if validated_location:
-                print(f"Validated location: {validated_location}\n")
+            location_response = validate_location_input(location_input)
+            if location_response:
+                formatted_address = location_response['formatted_address']
+                print(f"Found location: {formatted_address}")
+                confirm = input("Is this the correct location? (yes/no): ").strip().lower()
+                if confirm == 'yes':
+                    validated_location = formatted_address
+                else:
+                    print("Please try entering the location again.\n")
             else:
                 print("Invalid location. Please try again.\n")
 
@@ -181,13 +187,11 @@ def main():
         update_sheet(businesses)
         print("\nThe search results have been updated to the Google Sheet titled 'P_3 code inst'.\n")
 
-        # Ask if the user wants to perform another search
         another_search = input("Would you like to perform another search? (yes/no): ").strip().lower()
         if another_search != 'yes':
             print("Thank you for using the Local Business Finder. Goodbye!")
-            break  # Break out of the loop if the user doesn't want another search
+            break
 
 if __name__ == "__main__":
     main()
-
     
