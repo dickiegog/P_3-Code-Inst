@@ -53,7 +53,7 @@ def get_business_type_input():
         print(f"{i}. {business_type}")
     
     while True:
-        selection = input("Enter number: ").strip()
+        selection = input("Enter number: \n").strip()
         if selection.isdigit() and 1 <= int(selection) <= len(business_types):
             return business_types[int(selection) - 1]
         else:
@@ -155,7 +155,7 @@ def update_sheet(businesses):
 def main():
     validated_location = None
     while not validated_location:
-        location_input = input("Enter the location (e.g., 'Cork, Ireland'): ").strip()
+        location_input = input("Enter the location (e.g., 'Cork, Ireland'): \n").strip()
         validated_location = validate_location_input(location_input)
         if validated_location:
             print(f"Validated location: {validated_location}")
