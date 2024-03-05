@@ -72,7 +72,7 @@ After deployment, access the application via the command line and follow the int
 2. Choose a business type from the provided options.
 3. Review the fetched business information updated in the specified Google Sheet.
 
-Google Sheet Link: [Local Business Finder Results](https://docs.google.com/spreadsheets/d/1SGr8HLTg4N9j9foBEQx93-e1qJEULERhQS-CKm7BSRo/edit?usp=sharing)
+Google Sheet Link: <a href="https://docs.google.com/spreadsheets/d/1SGr8HLTg4N9j9foBEQx93-e1qJEULERhQS-CKm7BSRo/edit?usp=sharing" target="_blank">Local Business Finder Results</a>
 
 ## Testing
 
