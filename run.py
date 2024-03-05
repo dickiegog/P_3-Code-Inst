@@ -19,6 +19,7 @@ creds_raw = os.environ.get('CREDS', '{}')
 creds_dict = json.loads(creds_raw)  # Parse the JSON string into a Python dictionary
 
 CREDENTIALS = Credentials.from_service_account_info(creds_dict, scopes=SCOPE)  
+
 # Initialize Google Sheets and Google Maps clients with the credentials
 GS_CLIENT = gspread.authorize(CREDENTIALS)
 SHEET = GS_CLIENT.open("P_3 code inst").sheet1  
@@ -76,6 +77,7 @@ def introduction():
 def get_contact_info(website_url):
     print(f"Scraping website: {website_url}")
     emails, phones, additional_info = set(), set(), {}
+    description, addressRegion, starRating = '', '', ''
     mailto_found = False
 
     def scrape_page(url):
@@ -129,7 +131,11 @@ def get_contact_info(website_url):
     except Exception as e:
         print(f"Error finding additional contact info on {website_url}: {e}")
 
-    return ', '.join(emails) if emails else "Not Available", ', '.join(phones) if phones else "Not Available", additional_info
+    return ', '.join(emails) if emails else "Not Available", ', '.join(phones) if phones else "Not Available", {
+        'description': description,
+        'Region': addressRegion,
+        'Rating': starRating
+    }
 
 # function to fetch businesses data from Google Places API
 def fetch_businesses(location, business_type):
