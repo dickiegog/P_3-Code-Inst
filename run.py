@@ -23,20 +23,41 @@ SHEET = GS_CLIENT.open("P_3 code inst").sheet1
 GMAPS_CLIENT = googlemaps.Client(key=GOOGLE_MAPS_API_KEY)
 
 # validation functions for user input
-def validate_coordinates(input_str):
-    try:
-        lat, lng = map(float, input_str.split(","))
-        if lat < -90 or lat > 90 or lng < -180 or lng > 180:
-            raise ValueError("Coordinates out of range.")
-        return input_str
-    except ValueError as e:
-        print(f"Invalid coordinates: {e}")
-        return None
+def validate_location_input(location_input):
+    """
+    Validate the location input by querying Google Place API Find Place request.
+    """
+    find_place_url = 'https://maps.googleapis.com/maps/api/place/findplacefromtext/json'
+    params = {
+        'input': location_input,
+        'inputtype': 'textquery',
+        'fields': 'formatted_address',
+        'key': GOOGLE_MAPS_API_KEY
+    }
+    response = requests.get(find_place_url, params=params).json()
 
-def validate_business_type(value):
-    if not value:
-        raise argparse.ArgumentTypeError("Business type must not be empty.")
-    return value
+    if response['status'] == 'OK':
+        # If a location is found, return the formatted address
+        return response['candidates'][0]['formatted_address']
+    else:
+        # If no valid location is found, return None
+        return None
+        
+def get_business_type_input():
+    """
+    Allow the user to select a business type from a predefined list of options.
+    """
+    business_types = ['bar', 'restaurant', 'cafe', 'hotel']
+    print("Please select a business type by entering the corresponding number:")
+    for i, business_type in enumerate(business_types, start=1):
+        print(f"{i}. {business_type}")
+    
+    while True:
+        selection = input("Enter number: ").strip()
+        if selection.isdigit() and 1 <= int(selection) <= len(business_types):
+            return business_types[int(selection) - 1]
+        else:
+            print("Invalid selection. Please enter a number from the list.")
 
 # function to scrape any relevant details or info from website
 def get_contact_info(website_url):
@@ -132,15 +153,20 @@ def update_sheet(businesses):
 
 # main function and user input
 def main():
-    location_query = input("Enter the location (e.g., 'Cork, Ireland'): ").strip()
-    business_type = input("Enter the business type (e.g., 'bar'): ").strip()
-
-    business_type = validate_business_type(business_type)
-    if business_type:
-        businesses = fetch_businesses(location_query, business_type)
-        update_sheet(businesses)
-    else:
-        print("Please enter a valid business type.")
+    validated_location = None
+    while not validated_location:
+        location_input = input("Enter the location (e.g., 'Cork, Ireland'): ").strip()
+        validated_location = validate_location_input(location_input)
+        if validated_location:
+            print(f"Validated location: {validated_location}")
+        else:
+            print("Invalid location. Please try again.")
+    
+    business_type = get_business_type_input()
+    businesses = fetch_businesses(validated_location, business_type)
+    update_sheet(businesses)
 
 if __name__ == "__main__":
     main()
+
+    
