@@ -52,7 +52,7 @@ def get_business_type_input():
     """
     Allow the user to select a business type from a predefined list of options.
     """
-    business_types = ['bar', 'restaurant', 'cafe', 'hotel']
+    business_types = ['Bar', 'Restaurant', 'Cafe', 'Hotel']
     print("Please select a business type by entering the corresponding number:")
     for i, business_type in enumerate(business_types, start=1):
         print(f"{i}. {business_type}")
@@ -67,8 +67,8 @@ def get_business_type_input():
 # Introduction and explanation of the tool
 def introduction():
     print("Welcome to the Local Business Finder!")
-    print("This tool allows you to search for local businesses of a specific type within a given location.")
-    print("The search results will be updated in a Google Sheet for your convenience.")
+    print("This tool allows you to search for local hospitality businesses information based on their location.")
+    print("The search results will be updated in a Google Sheet provided in README.")
     print("Let's get started! Follow the prompts below:\n")
 
 
@@ -185,7 +185,7 @@ def main():
         business_type = get_business_type_input()
         businesses = fetch_businesses(validated_location, business_type)
         update_sheet(businesses)
-        print("\nThe search results have been updated to the Google Sheet titled 'P_3 code inst'.\n")
+        print("\nThe search results have been updated to the Google Sheet titled 'P_3 code inst, you can find the link in the README.'.\n")
 
         another_search = input("Would you like to perform another search? (yes/no): ").strip().lower()
         if another_search != 'yes':
