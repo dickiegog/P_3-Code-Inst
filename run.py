@@ -13,18 +13,16 @@ SCOPE = [
     "https://www.googleapis.com/auth/drive.file",
     "https://www.googleapis.com/auth/drive"
 ]
-SERVICE_ACCOUNT_FILE = json.loads(os.environ.get('CREDS', '{}'))
-GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_MAPS_API_KEY')
 
-# Initialize clients
-# Load credentials directly from 'CREDS' environment variable
-creds_raw = os.environ.get('CREDS', '{}')
-creds_dict = json.loads(creds_raw)
+# Get credentials from environment variable
+creds_raw = os.environ.get('CREDS', '{}')  
+creds_dict = json.loads(creds_raw)  # Parse the JSON string into a Python dictionary
 
-CREDENTIALS = Credentials.from_service_account_info(creds_dict)
+CREDENTIALS = Credentials.from_service_account_info(creds_dict, scopes=SCOPE)  
+# Initialize Google Sheets and Google Maps clients with the credentials
 GS_CLIENT = gspread.authorize(CREDENTIALS)
-SHEET = GS_CLIENT.open("P_3 code inst").sheet1
-GMAPS_CLIENT = googlemaps.Client(key=os.environ.get('GOOGLE_MAPS_API_KEY'))
+SHEET = GS_CLIENT.open("P_3 code inst").sheet1  
+GMAPS_CLIENT = googlemaps.Client(key=os.environ.get('GOOGLE_MAPS_API_KEY')) 
 
 # validation functions for user input
 def validate_location_input(location_input):
