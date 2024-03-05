@@ -1,16 +1,51 @@
-![CI logo](https://codeinstitute.s3.amazonaws.com/fullstack/ci_logo_small.png)
+# Local Business Finder
 
-Welcome,
+## Table of Contents
 
-This is the Code Institute student template for deploying your third portfolio project, the Python command-line project. The last update to this file was: **March 14, 2023**
+- [Introduction](#introduction)
+- [Key Features](#key-features)
+- [Technology Stack](#technology-stack)
+- [Deployment](#deployment)
+- [Configuration](#configuration)
+- [Usage](#usage)
+- [Testing](#testing)
+- [Contributing](#contributing)
+- [License](#license)
+- [Acknowledgments](#acknowledgments)
+- [Contact](#contact)
 
-## Reminders
+## Introduction
 
-- Your code must be placed in the `run.py` file
-- Your dependencies must be placed in the `requirements.txt` file
-- Do not edit any of the other files or your code may not deploy properly
+The Local Business Finder is a Python-based application designed to leverage Google Places API and web scraping techniques to help users discover businesses in their desired locations. This tool is particularly useful for identifying contact information, business types, and additional details to support local economies and provide accessible information.
 
-## Creating the Heroku app
+## Key Features
+
+- **Business Search**: Users can search for businesses by type and location.
+- **Data Scraping**: Extracts contact information and additional details from business websites.
+- **Google Sheets Integration**: Automatically updates a Google Sheet with search results for easy access and analysis.
+- **User Interaction**: Simple command-line interface for inputting search criteria and receiving prompts.
+
+## Technology Stack
+
+- Python
+- BeautifulSoup for web scraping
+- Google Maps and Places API for business information
+- gspread for Google Sheets integration
+- Heroku for deployment
+
+## Deployment
+
+This application is deployed on Heroku. Follow these steps for deployment:
+
+1. Fork or clone this repository.
+2. Create a new Heroku app.
+3. Set up Config Vars in Heroku: `CREDS`, `GOOGLE_MAPS_API_KEY`, and `PORT`.
+4. Connect your GitHub repository to Heroku and enable automatic deploys.
+5. Deploy the main branch.
+
+Refer to Heroku's official documentation for detailed steps.
+
+## Configuration
 
 When you create the app, you will need to add two buildpacks from the _Settings_ tab. The ordering is as follows:
 
@@ -23,10 +58,47 @@ If you have credentials, such as in the Love Sandwiches project, you must create
 
 Connect your GitHub repository and deploy as normal.
 
-## Constraints
+Ensure the following environment variables are configured in your deployment environment:
 
-The deployment terminal is set to 80 columns by 24 rows. That means that each line of text needs to be 80 characters or less otherwise it will be wrapped onto a second line.
+- `GOOGLE_MAPS_API_KEY`: Your API key for Google Maps and Places.
+- `CREDS`: A JSON string of your Google service account credentials for accessing Google Sheets.
+- `PORT`: The port number on which your application will run, typically `8000` for local development.
 
----
+## Usage
 
-Happy coding!
+After deployment, access the application via the command line and follow the interactive prompts:
+
+1. Input the desired location (e.g., "Cork, Ireland").
+2. Choose a business type from the provided options.
+3. Review the fetched business information updated in the specified Google Sheet.
+
+Google Sheet Link: [Local Business Finder Results](https://docs.google.com/spreadsheets/d/1SGr8HLTg4N9j9foBEQx93-e1qJEULERhQS-CKm7BSRo/edit?usp=sharing)
+
+## Testing
+
+This application has undergone multiple testing phases:
+
+- Local testing for functionality and bug fixes.
+- Heroku deployment testing to ensure proper environment variable configuration.
+- Continuous integration testing for upcoming features like Google geolocation API integration.
+- We have added checks through the CLI to ensure the correct data is being fetched
+- Correct deployment should have the following output
+  ![Application Running Correctly](assets/images/app_running.png)
+
+## Contributing
+
+Contributions are always welcome. Please open an issue to discuss proposed changes or submit a pull request.
+
+## License
+
+This project is for use by testing by Code Institute evaluators, it is not meant for personal use or commercial gain. We do not accept any responsibility for the misuse of the code.
+
+## Acknowledgments
+
+- Google Places API for providing extensive business data.
+- BeautifulSoup for enabling efficient web scraping.
+- The Code Institute for guidance and resources on project deployment.
+
+## Contact
+
+For inquiries or contributions, please contact [your-email@example.com](mailto:richard@theworkwall.com).
