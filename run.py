@@ -17,10 +17,14 @@ SERVICE_ACCOUNT_FILE = json.loads(os.environ.get('CREDS', '{}'))
 GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_MAPS_API_KEY')
 
 # Initialize clients
-CREDENTIALS = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPE)
+# Load credentials directly from 'CREDS' environment variable
+creds_raw = os.environ.get('CREDS', '{}')
+creds_dict = json.loads(creds_raw)
+
+CREDENTIALS = Credentials.from_service_account_info(creds_dict)
 GS_CLIENT = gspread.authorize(CREDENTIALS)
 SHEET = GS_CLIENT.open("P_3 code inst").sheet1
-GMAPS_CLIENT = googlemaps.Client(key=GOOGLE_MAPS_API_KEY)
+GMAPS_CLIENT = googlemaps.Client(key=os.environ.get('GOOGLE_MAPS_API_KEY'))
 
 # validation functions for user input
 def validate_location_input(location_input):
