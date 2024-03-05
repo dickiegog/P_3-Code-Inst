@@ -98,6 +98,11 @@ This project is for use by testing by Code Institute evaluators, it is not meant
 - Google Places API for providing extensive business data.
 - BeautifulSoup for enabling efficient web scraping.
 - The Code Institute for guidance and resources on project deployment.
+- To fully understand these API tools and the necessary code and format needed to use them, we mostly referenced Stack Overflow and Google Places, namely the below, so some overlapping may occur for layout and code structure for email/number references:
+  [^1]: [Google Maps Address Validation Overview](https://developers.google.com/maps/documentation/address-validation/overview)
+  [^2]: [Scrape right phone numbers using Beautiful Soup in Python - Stack Overflow](https://stackoverflow.com/questions/55957937/scrape-right-phone-numbers-using-beautiful-soup-in-python)
+  [^3]: [Scraping email addresses Beautiful Soup - Stack Overflow](https://stackoverflow.com/questions/71166959/scraping-email-addresses-beautiful-soup)
+  [^4]: [BeautifulSoup: How to extract email from a website - Stack Overflow](https://stackoverflow.com/questions/57944130/beautifulsoup-how-to-extract-email-from-a-website)
 
 ## Contact
 
