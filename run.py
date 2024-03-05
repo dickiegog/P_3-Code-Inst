@@ -99,32 +99,27 @@ def get_contact_info(website_url):
 
 # function to fetch businesses data from Google Places API
 def fetch_businesses(location, business_type):
-    print(f"Fetching businesses for location: {location}, type: {business_type}")
+    query = f"{business_type} in {location}"
+    print(f"Searching for: {query}")
     businesses = []
+    search_result = GMAPS_CLIENT.places(query=query)
 
-    try:
-        places_result = GMAPS_CLIENT.places_nearby(location=location, radius=2000, type=business_type)
-        
-        if 'results' in places_result and places_result['results']:
-            for place in places_result['results'][:5]:  # Limit for testing
-                name = place.get('name', 'Not Available')
-                address = place.get('vicinity', 'Not Available')
-                place_id = place.get('place_id', '')
-                
-                details_result = GMAPS_CLIENT.place(place_id=place_id, fields=['website'])
-                website = details_result.get('result', {}).get('website', 'Not Available')
-                
-                email, phone, additional_info = get_contact_info(website) if website != 'Not Available' else ('Not Available', 'Not Available', {})
-
-                business_info = [name, address, email, phone, website, additional_info.get('description', ''), additional_info.get('addressRegion', ''), additional_info.get('starRating', '')]
-                businesses.append(business_info)
-                print(f"Fetched business info: {business_info}")
-        else:
-            print("No results found in the Google Places API response.")
-    except Exception as e:
-        print(f"Error fetching businesses: {e}")
+    if 'results' in search_result and search_result['results']:
+        for place in search_result['results'][:5]: 
+            name = place.get('name', 'Not Available')
+            address = place.get('formatted_address', 'Not Available')
+            place_id = place.get('place_id', '')
+            details_result = GMAPS_CLIENT.place(place_id=place_id, fields=['website'])
+            website = details_result.get('result', {}).get('website', 'Not Available')
+            email, phone, additional_info = get_contact_info(website) if website != 'Not Available' else ('Not Available', 'Not Available', {})
+            business_info = [name, address, email, phone, website, additional_info.get('description', ''), additional_info.get('addressRegion', ''), additional_info.get('starRating', '')]
+            businesses.append(business_info)
+            print(f"Fetched business info: {business_info}")
+    else:
+        print("No results found for the specified query.")
     
     return businesses
+
 # add info to Google Sheets
 def update_sheet(businesses):
     SHEET.clear()
@@ -137,20 +132,15 @@ def update_sheet(businesses):
 
 # main function and user input
 def main():
-    while True:
-        location_input = input("Enter the coordinates (latitude,longitude): ")
-        location = validate_coordinates(location_input)
-        if location:
-            break
-        else:
-            print("Please enter valid coordinates.")
+    location_query = input("Enter the location (e.g., 'Cork, Ireland'): ").strip()
+    business_type = input("Enter the business type (e.g., 'bar'): ").strip()
 
-    business_type = input("Enter the business type: ").strip()
+    business_type = validate_business_type(business_type)
     if business_type:
-        businesses = fetch_businesses(location, business_type)
+        businesses = fetch_businesses(location_query, business_type)
         update_sheet(businesses)
     else:
-        print("Business type cannot be empty.")
+        print("Please enter a valid business type.")
 
 if __name__ == "__main__":
     main()
