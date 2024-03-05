@@ -13,7 +13,7 @@ SCOPE = [
     "https://www.googleapis.com/auth/drive.file",
     "https://www.googleapis.com/auth/drive"
 ]
-SERVICE_ACCOUNT_FILE = 'creds.json' 
+SERVICE_ACCOUNT_FILE = json.loads(os.environ.get('CREDS', '{}'))
 GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_MAPS_API_KEY')
 
 # Initialize clients
