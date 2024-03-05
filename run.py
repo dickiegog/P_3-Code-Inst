@@ -24,6 +24,9 @@ GS_CLIENT = gspread.authorize(CREDENTIALS)
 SHEET = GS_CLIENT.open("P_3 code inst").sheet1  
 GMAPS_CLIENT = googlemaps.Client(key=os.environ.get('GOOGLE_MAPS_API_KEY')) 
 
+# REassign the GOOGLE_MAPS_API_KEY variable globally
+GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_MAPS_API_KEY')
+
 # validation functions for user input
 def validate_location_input(location_input):
     """
