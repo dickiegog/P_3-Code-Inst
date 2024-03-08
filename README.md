@@ -38,7 +38,6 @@ Before you begin, ensure you have the following software installed on your syste
 - BeautifulSoup4
 - gspread
 - oauth2client
-- Flask
 
 ### Installation
 
@@ -109,7 +108,7 @@ Ensure the following environment variables are configured in your deployment env
 
 After deployment, access the application via the command line and follow the interactive prompts:
 
-![Application Running Correctly](assets/images/app_running.png)
+![Application Running Correctly](assets/images/app-running.png)
 
 1. Input the desired location (e.g., "Cork, Ireland").
 
