@@ -52,7 +52,7 @@ Before you begin, ensure you have the following software installed on your syste
    ```bash
    pip install -r requirements.txt
    ```
-3. Configure your Google API credentials and update the `config.py` file with the necessary details.
+3. Configure your Google API credentials and update based on [Configuration](#configuration) section instructions.
 
 ## Key Features
 
