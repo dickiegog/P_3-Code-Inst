@@ -147,13 +147,14 @@ We warmly welcome contributions to the Local Business Finder project. If you hav
 
 ## Authors
 
-- **Richard Goggin** - _Initial work_ - [<MyGitHub>](https://github.com/dickiegog)
+- **Richard Goggin** - _Initial work_ - [My Github](https://github.com/dickiegog)
 
 ## Considerations for Correcting
 
 - **Google API Key**: The Google API Key was initially hardcoded into the code. Although it was removed before pushing to GitHub, it was present in an old commit and thus logged into the commit history. My mentor advised that the best course of action was to mention it here.
 - **Markdown Language Issues**: There have been issues with the Markdown language causing the Google Sheet link in this README not to open in a new tab, despite attempts to format it correctly.
 - We would like the HTML scraping to be more thorough but we got to a stage a where we would have to try to bypass blockers so did not continue due to ethical considerations.
+- My first commit (after intitial commit) may be larger as it contains the first running model of the app to work on, all commits after are interations on this.
 
 ## License
 
