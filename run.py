@@ -75,7 +75,7 @@ def introduction():
 
 # function to scrape any relevant details or info from website
 def get_contact_info(website_url):
-    print(f"Scraping website: {website_url}")
+    print(f"\nScraping new website: {website_url}")
     emails, phones, additional_info = set(), set(), {}
     description, addressRegion, starRating = '', '', ''
     mailto_found = False
@@ -140,7 +140,8 @@ def get_contact_info(website_url):
 # function to fetch businesses data from Google Places API
 def fetch_businesses(location, business_type):
     query = f"{business_type} in {location}"
-    print(f"Searching for: {query}")
+    print(f"Searching for: {query}\n")
+    print(f"****** Start scraping ******\n")
     businesses = []
     search_result = GMAPS_CLIENT.places(query=query)
 
@@ -163,9 +164,13 @@ def fetch_businesses(location, business_type):
 def update_sheet(businesses):
     SHEET.clear()
     SHEET.append_row(["Business Name", "Address", "Email", "Phone", "Website", "Description", "Address Region", "Star Rating"])
+    print("\n***** Finished Scraping *****")
     for business in businesses:
         try:
             SHEET.append_row(business)
+            # Check if email is not 'Not Available' and print the business name and phone number
+            if business[2] != 'Not Available':
+                print(f"Business Name: {business[0]}, Email: {business[2]}, Phone: {business[3]}")
         except Exception as e:
             print(f"Error updating sheet for {business[0]}: {e}")
 
