@@ -137,6 +137,7 @@ This application has undergone multiple testing phases:
 - Correct deployment should have the following output
   ![Application Running Correctly](assets/images/app_running.png)
 - Desired user objective is attained and ethical considerations taken into account by fetching only data readily available on Google Places API and saving that data to a source for that user.
+- Fetches are limited to 5 businesses in each location as this is a test project
 
 ## Contributing
 
@@ -154,6 +155,7 @@ We warmly welcome contributions to the Local Business Finder project. If you hav
 - **Markdown Language Issues**: There have been issues with the Markdown language causing the Google Sheet link in this README not to open in a new tab, despite attempts to format it correctly.
 - We would like the HTML scraping to be more thorough but we got to a stage a where we would have to try to bypass blockers so did not continue due to ethical considerations.
 - My first commit (after intitial commit) may be larger as it contains the first running model of the app to work on, all commits after are interations on this.
+- We have set a limit of 5 businesses to be fetched at a time so as not to incur additonal costs with Goggle Places API
 
 ## License
 
