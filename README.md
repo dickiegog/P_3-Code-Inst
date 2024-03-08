@@ -21,7 +21,6 @@ Welcome to the Local Business Finder project! This innovative Python-based appli
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
 - [Contact](#contact)
-- [FAQs](#faqs)
 
 ## Introduction
 
@@ -44,11 +43,10 @@ Before you begin, ensure you have the following software installed on your syste
 ### Installation
 
 1. Clone the repository to your local machine:
+
    ```bash
    git clone https://github.com/yourproject/local-business-finder.git
    ```
-
-````
 
 2. Install the required dependencies:
    ```bash
@@ -177,6 +175,3 @@ This project is for use for testing by Code Institute evaluators, it is not mean
 
 For inquiries or contributions
 , please contact [richard@theworkwall.com](mailto:richard@theworkwall.com).
-
-## FAQs
-````
