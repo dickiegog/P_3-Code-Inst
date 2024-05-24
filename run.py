@@ -7,6 +7,7 @@ import re
 import json
 import os
 
+
 # Setup for Google Sheets and Google Places API
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -132,7 +133,7 @@ def get_contact_info(website_url):
 
     scrape_page(website_url)
 
-    # Attempt to find and scrape additional contact pages
+    # Attempt to find and scrape additional contact pages until an email is found
     try:
         soup = BeautifulSoup(requests.get(website_url).text, "html.parser")
         for link in soup.find_all("a", href=True):
@@ -142,9 +143,16 @@ def get_contact_info(website_url):
             ):
                 full_url = requests.compat.urljoin(website_url, href)
                 scrape_page(full_url)
+                if emails:
+                    break
+
+            # Check for social media links (e.g., Facebook)
+            if "facebook.com" in href.lower():
+                scrape_page(href)
+                if emails:
+                    break
     except Exception as e:
         print(f"Error finding additional contact info on {website_url}: {e}")
-
     return (
         ", ".join(emails) if emails else "Not Available",
         ", ".join(phones) if phones else "Not Available",
@@ -161,7 +169,7 @@ def fetch_businesses(location, business_type):
     search_result = GMAPS_CLIENT.places(query=query)
 
     if "results" in search_result and search_result["results"]:
-        for place in search_result["results"][:5]:
+        for place in search_result["results"]:
             name = place.get("name", "Not Available")
             address = place.get("formatted_address", "Not Available")
             place_id = place.get("place_id", "")
