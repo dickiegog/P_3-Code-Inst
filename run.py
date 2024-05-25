@@ -145,13 +145,9 @@ def get_contact_info(website_url):
                 scrape_page(full_url)
                 if emails:
                     break
-
-            # Check for social media links (e.g., Facebook)
-            if "facebook.com" in href.lower():
-                scrape_page(href)
-                
     except Exception as e:
         print(f"Error finding additional contact info on {website_url}: {e}")
+
     return (
         ", ".join(emails) if emails else "Not Available",
         ", ".join(phones) if phones else "Not Available",
