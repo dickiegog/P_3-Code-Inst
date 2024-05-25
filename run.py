@@ -149,8 +149,7 @@ def get_contact_info(website_url):
             # Check for social media links (e.g., Facebook)
             if "facebook.com" in href.lower():
                 scrape_page(href)
-                if emails:
-                    break
+                
     except Exception as e:
         print(f"Error finding additional contact info on {website_url}: {e}")
     return (
